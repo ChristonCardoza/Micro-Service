@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 import { OrderStatus } from '@generalticket/common';
 
 import { TicketDoc } from './ticket';
@@ -8,7 +9,7 @@ interface OrderAttrs {
     userId: string;
     status: OrderStatus;
     expiresAt: Date;
-    ticket: TicketDoc
+    ticket: TicketDoc;
 }
 
 // properties Order Documents has
@@ -16,7 +17,8 @@ interface OrderDoc extends mongoose.Document {
     userId: string;
     status: OrderStatus;
     expiresAt: Date;
-    ticket: TicketDoc
+    ticket: TicketDoc;
+    version: number;
 }
 
 // properties that a Order Model has
@@ -50,6 +52,9 @@ const orderSchema = new mongoose.Schema({
         }
     }
 });
+
+orderSchema.set('versionKey', 'version');
+orderSchema.plugin(updateIfCurrentPlugin);
 
 orderSchema.statics.build = (attrs: OrderAttrs) => {
     return new Order(attrs);
