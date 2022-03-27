@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { Ticket } from "../../../model/ticket";
 import { natsWrapper } from "../../../nats-wrapper";
 import { TicketUpdatedListener } from "../ticket-updated-listener";
+import { Message } from 'node-nats-streaming';
 
 const setup = async () => {
     // create an instance of the listener
