@@ -8,7 +8,8 @@ import { natsWrapper } from './nats-wrapper';
 const start = async () => {
     // kubectl create secret generic jwt-secret --from-literal=JWT_KEY=asdf
     // kubectl create secret generic strip-secret --from-literal=STRIPE_KEY=sk_test_51JAIM1SB8iKkzqsGL8f5ksdvANZi2ZkuPzB47c8hF5zGOLquvxmeyu0L0fXqWOwfiwJTadOIkKYsBLeTxgszJyYj00UWWBC0wj
-
+    console.log('Payment Service Started ...');
+    
     if(!process.env.JWT_KEY){
         throw new Error('JWT_KEY must be defined');
     }
