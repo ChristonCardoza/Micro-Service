@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: "qa"
+
+build:
+  version: "2.0"
+
+loans:
+  message: "welcome to cardoBank cards related QA APIs"
+  contactDetails:
+    name: "Smitha Ray - QA Lead"
+    emai: "smitha@cardobank.com"
+  onCallSupport:
+    - (666) 555-1234
+    - (666) 523-1345
