@@ -10,7 +10,7 @@ loans:
   message: "welcome to cardoBank cards related QA APIs"
   contactDetails:
     name: "Smitha Ray - QA Lead"
-    emai: "smitha@cardobank.com"
+    email: "smitha@cardobank.com"
   onCallSupport:
     - (666) 555-1234
     - (666) 523-1345

@@ -1,0 +1,11 @@
+build:
+  version: "1.0"
+
+loans:
+  message: "welcome to cardoBank loans related local APIs"
+  contactDetails:
+    name: "Christu - Developer"
+    email: "generaltest96@gmail.com"
+  onCallSupport:
+    - (555) 555-1234
+    - (555) 523-1345

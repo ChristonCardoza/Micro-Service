@@ -1,0 +1,47 @@
+server:
+  port: 8071
+
+
+spring:
+  application:
+    name: "configserver"
+  profiles:
+#    active: native
+   active: git
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"
+  cloud:
+    config:
+      server:
+#        native:
+##          search-locations: "classpath:/config"
+#          search-locations: "file:///Users//cardoza//Documents//practice//Micro-Service//java//starter//configserver//src//main//resources//config"
+       git:
+         uri: "https://github.com/eazybytes/eazybytes-config.git"
+         default-label: main #branch name
+         timeout: 5
+         clone-on-start: true # clone before server starts
+         force-pull: true
+
+encrypt:
+  key: "45D81EC1EF61DF9AD8D3E5BB397F9"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+
