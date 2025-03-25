@@ -1,22 +1,52 @@
 services:
-  rabbit:
-    image: rabbitmq:4.0-management
-    hostname: rabbitmq
+#  rabbit:
+#    image: rabbitmq:4.0-management
+#    hostname: rabbitmq
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
+#    healthcheck:
+#      test: rabbitmq-diagnostics check_port_connectivity
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#      start_period: 5s
+#    extends:
+#      file: common-config.yml
+#      service: network-deploy-service
+
+  accountsdb:
+    container_name: accountsdb
     ports:
-      - "5672:5672"
-      - "15672:15672"
-    healthcheck:
-      test: rabbitmq-diagnostics check_port_connectivity
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 5s
+      - 3305:3306
+    environment:
+      MYSQL_DATABASE: accountsdb
     extends:
       file: common-config.yml
-      service: network-deploy-service
+      service: microservice-db-config
+
+  cardsdb:
+    container_name: cardsdb
+    ports:
+      - 3308:3306
+    environment:
+      MYSQL_DATABASE: cardsdb
+    extends:
+      file: common-config.yml
+      service: microservice-db-config
+
+  loandsdb:
+    container_name: loandsdb
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_DATABASE: loandsdb
+    extends:
+      file: common-config.yml
+      service: microservice-db-config
 
   configserver:
-    image: generaltest/configserver:s6
+    image: generaltest/configserver:s7
     container_name: configserver-ms
     ports:
       - "8071:8071"
@@ -26,42 +56,54 @@ services:
       timeout: 5s
       retries: 10
       start_period: 10s
-    depends_on:
-      rabbit:
-        condition: service_healthy
+#    depends_on:
+#      rabbit:
+#        condition: service_healthy
     extends:
       file: common-config.yml
       service: microservice-base-config
 
   accounts:
-    image: generaltest/account:s6
+    image: generaltest/account:s7
     container_name: accounts-ms
     ports:
       - "8080:8080"
     environment:
       SPRING_APPLICATION_NAME: "accounts"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://accountsdb:3306/accountsdb"
+    depends_on:
+      accountsdb:
+        condition: service_healthy
     extends:
       file: common-config.yml
       service: microservice-configserver-config
 
   loans:
-    image: generaltest/loans:s6
+    image: generaltest/loans:s7
     container_name: loans-ms
     ports:
       - "8090:8090"
     environment:
       SPRING_APPLICATION_NAME: "loans"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://loansdb:3306/loansdb"
+    depends_on:
+      loandsdb:
+        condition: service_healthy
     extends:
       file: common-config.yml
       service: microservice-configserver-config
 
   cards:
-    image: generaltest/cards:s6
+    image: generaltest/cards:s7
     container_name: cards-ms
     ports:
       - "9000:9000"
     environment:
       SPRING_APPLICATION_NAME: "cards"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://cardsdb:3306/cardsdb"
+    depends_on:
+      cardsdb:
+        condition: service_healthy
     extends:
       file: common-config.yml
       service: microservice-configserver-config

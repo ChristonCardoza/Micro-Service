@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 public class LoansController {
 
+    @Autowired
     private ILoansService iLoansService;
 
     @Value("${build.version}")
