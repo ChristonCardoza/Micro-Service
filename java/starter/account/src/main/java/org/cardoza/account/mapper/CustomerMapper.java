@@ -1,5 +1,6 @@
 package org.cardoza.account.mapper;
 
+import org.cardoza.account.dto.CustomerDetailsDto;
 import org.cardoza.account.dto.CustomerDto;
 import org.cardoza.account.entity.Customer;
 
@@ -17,5 +18,12 @@ public class CustomerMapper {
         customer.setEmail(customerDto.getEmail());
         customer.setMobileNumber(customerDto.getMobileNumber());
         return customer;
+    }
+
+    public static CustomerDetailsDto mapToCustomerDetailsDto(Customer customer, CustomerDetailsDto customerDetailsDto) {
+        customerDetailsDto.setName(customer.getName());
+        customerDetailsDto.setEmail(customer.getEmail());
+        customerDetailsDto.setMobileNumber(customer.getMobileNumber());
+        return customerDetailsDto;
     }
 }

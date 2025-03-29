@@ -79,7 +79,7 @@
 				<configuration>
 					<!-- Name of the Docker image -->
 					<to>
-						<image>generaltest/${project.artifactId}:s7</image>
+						<image>generaltest/${project.artifactId}:s8</image>
 					</to>
 				</configuration>
 			</plugin>
