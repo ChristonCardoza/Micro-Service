@@ -21,7 +21,9 @@ public class GatewayserverApplication {
 				.route(p ->
 						p.path("/cardobank/accounts/**")
 								.filters(f -> f.rewritePath("/cardobank/accounts/(?<segment>.*)", "/${segment}")
-										.addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+										.addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
+										.circuitBreaker(config -> config.setName("accountsCircuitbreaker")
+												.setFallbackUri("forward:/contactSupport")))
 								.uri("lb://ACCOUNTS"))
 				.route(p ->
 						p.path("/cardobank/loans/**")
