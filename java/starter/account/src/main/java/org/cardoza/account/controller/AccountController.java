@@ -1,5 +1,6 @@
 package org.cardoza.account.controller;
 
+import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -8,7 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.cardoza.account.constants.AccountsConstants;
 import org.cardoza.account.dto.AccountContactInfoDto;
@@ -16,6 +16,8 @@ import org.cardoza.account.dto.CustomerDto;
 import org.cardoza.account.dto.ErrorResponseDto;
 import org.cardoza.account.dto.ResponseDto;
 import org.cardoza.account.service.IAccountService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -24,6 +26,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.TimeoutException;
 
 @Tag(
         name = "CRUD REST APIs for Accounts in CardoBank",
@@ -34,6 +38,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Validated
 public class AccountController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     @Autowired
     private IAccountService accountService;
@@ -152,9 +158,20 @@ public class AccountController {
                     )
             )
     })
+    @Retry(name="getBuildInfo", fallbackMethod = "getBuildInfoFallback")
     @GetMapping("/build-info")
-    public ResponseEntity<String> getBuildInfo() {
+    public ResponseEntity<String> getBuildInfo() throws TimeoutException {
+        logger.debug("Invoked GetBuildInfo API");
+//        throw new NullPointerException();
+//        throw new TimeoutException();
         return ResponseEntity.ok(buildVersion);
+    }
+
+    private ResponseEntity<String> getBuildInfoFallback(Throwable throwable) {
+        logger.debug("Invoked getBuildInfoFallback API");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("0.9");
     }
 
     @Operation(
