@@ -109,7 +109,7 @@
 				<version>3.3.2</version>
 				<configuration>
 					<to>
-						<image>generaltest/${project.artifactId}:s11</image>
+						<image>generaltest/${project.artifactId}:s12</image>
 					</to>
 				</configuration>
 			</plugin>
