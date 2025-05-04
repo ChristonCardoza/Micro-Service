@@ -3,6 +3,7 @@ package org.cardoza.account.service.impl;
 import lombok.AllArgsConstructor;
 import org.cardoza.account.constants.AccountsConstants;
 import org.cardoza.account.dto.AccountsDto;
+import org.cardoza.account.dto.AccountsMsgDto;
 import org.cardoza.account.entity.Accounts;
 import org.cardoza.account.entity.Customer;
 import org.cardoza.account.exception.CustomerAlreadyExistsException;
@@ -13,6 +14,9 @@ import org.cardoza.account.respository.AccountsRepository;
 import org.cardoza.account.respository.CustomerRepository;
 import org.cardoza.account.service.IAccountService;
 import org.cardoza.account.dto.CustomerDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,8 +27,11 @@ import java.util.Random;
 @AllArgsConstructor
 public class AccountServiceImpl implements IAccountService {
 
+    private static final Logger log = LoggerFactory.getLogger(AccountServiceImpl.class);
+
     private AccountsRepository accountsRepository;
     private CustomerRepository customerRepository;
+    private final StreamBridge streamBridge;
 
     /**
      *
@@ -40,7 +47,16 @@ public class AccountServiceImpl implements IAccountService {
 //        customer.setCreatedAt(LocalDateTime.now());
 //        customer.setCreatedBy("system");
         Customer savedCustomer = customerRepository.save(customer);
-        accountsRepository.save(createNewAccount(savedCustomer));
+        Accounts savedAccount = accountsRepository.save(createNewAccount(savedCustomer));
+
+        sendCommunication(savedAccount, savedCustomer);
+    }
+
+    private void sendCommunication(Accounts account, Customer customer) {
+        var accountsMsgDto = new AccountsMsgDto(account.getAccountNumber(), customer.getName(), customer.getEmail(), customer.getMobileNumber());
+        log.info("Sending Communication Request for the details: {}", accountsMsgDto);
+        var result = streamBridge.send("sendCommunication-out-0", accountsMsgDto);
+        log.info("Sending Communication Request successfully processed ?: {}", result);
     }
 
     /**
@@ -106,6 +122,26 @@ public class AccountServiceImpl implements IAccountService {
     }
 
     /**
+     * @param accountNumber -Long
+     * @return boolean indicating if the update of communication status is successful or not
+     */
+    @Override
+    public boolean updateCommunicationStatus(Long accountNumber) {
+        boolean isUpdated = false;
+        if(accountNumber!=null) {
+            Accounts accounts = accountsRepository.findById(accountNumber).orElseThrow(
+                    () -> new ResourceNotFoundException("Account", "accountNumber", accountNumber.toString())
+            );
+
+            accounts.setCommunicationSw(true);
+            accountsRepository.save(accounts);
+            isUpdated = true;
+        }
+
+        return isUpdated;
+    }
+
+    /**
      *
      * @param customer - Customer object
      * @return the new account details
@@ -122,4 +158,6 @@ public class AccountServiceImpl implements IAccountService {
 //         newAccount.setCreatedBy("system");
          return newAccount;
     }
+
+
 }
