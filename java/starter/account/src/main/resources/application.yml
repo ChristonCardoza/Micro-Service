@@ -43,14 +43,18 @@ spring:
         updateCommunication-in-0:
           destination: communication-sent
           group: ${spring.application.name}
-    function:
-      definition: updateCommunication # function name (a;b;c)
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-    connection-timeout: 10s
+      kafka:
+        binder:
+          brokers:
+            - localhost:9092
+#    function:
+#      definition: updateCommunication # function name (a;b;c)
+#  rabbitmq:
+#    host: localhost
+#    port: 5672
+#    username: guest
+#    password: guest
+#    connection-timeout: 10s
 
 management:
   endpoints:
