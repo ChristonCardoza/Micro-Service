@@ -1,0 +1,17 @@
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+
+build:
+  version: "1.0"
+
+accounts:
+  message: "welcome to cardoBank accounts related prod APIs"
+  contactDetails:
+    name: "Reine Aishwarya - Product Owner"
+    emai: "aishwarya@cardobank.com"
+  onCallSupport:
+    - (453) 392-4829
+    - (453) 203-0384
+
