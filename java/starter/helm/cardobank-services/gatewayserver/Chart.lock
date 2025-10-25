@@ -1,0 +1,6 @@
+dependencies:
+- name: cardobank-common
+  repository: file://../../cardobank-common
+  version: 0.1.0
+digest: sha256:afe82abe5502facc8393827348b5bb61f13974aa990a520c0512943eccd93937
+generated: "2025-10-20T15:06:02.409356+05:30"

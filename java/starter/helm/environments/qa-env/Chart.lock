@@ -1,0 +1,27 @@
+dependencies:
+- name: cardobank-common
+  repository: file://../../cardobank-common
+  version: 0.1.0
+- name: configserver
+  repository: file://../../cardobank-services/configserver
+  version: 0.1.0
+- name: eurekaserver
+  repository: file://../../cardobank-services/eurekaserver
+  version: 0.1.0
+- name: accounts
+  repository: file://../../cardobank-services/accounts
+  version: 0.1.0
+- name: cards
+  repository: file://../../cardobank-services/cards
+  version: 0.1.0
+- name: loans
+  repository: file://../../cardobank-services/loans
+  version: 0.1.0
+- name: gatewayserver
+  repository: file://../../cardobank-services/gatewayserver
+  version: 0.1.0
+- name: message
+  repository: file://../../cardobank-services/message
+  version: 0.1.0
+digest: sha256:3583415cbf70a16f8552a9f2d2e293b41b3a94b0f5d6ce917f6e8e59f9286aa1
+generated: "2025-10-20T15:12:01.323063+05:30"
