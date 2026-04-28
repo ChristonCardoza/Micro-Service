@@ -1,0 +1,6 @@
+docker run -d --name axonserver \
+    -p 8024:8024 -p 8124:8124 \
+    -v "/Users/cardoza/Documents/practice/Micro-Service/java/02_CQRS/axonserver/data":/axonserver/data \
+    -v "/Users/cardoza/Documents/practice/Micro-Service/java/02_CQRS/axonserver/events":/axonserver/events \
+    -v "/Users/cardoza/Documents/practice/Micro-Service/java/02_CQRS/axonserver/config":/axonserver/config \
+    axoniq/axonserver
